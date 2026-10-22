@@ -1,0 +1,331 @@
+/* 1. Basic page settings */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0b1020;
+      --panel: #131b30;
+      --text: #f5f7ff;
+      --muted: #a6b0ca;
+      --accent: #8b7cff;
+      --cyan: #53d9e8;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    /* 2. Top navigation */
+    header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 22px 6%;
+  border-bottom: 1px solid #27304a;
+}
+
+.logo {
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  font-weight: bold;
+}
+
+.status {
+  color: var(--muted);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: var(--cyan);
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* 3. Main introduction section */
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 38px 6%;
+    }
+
+    .hero {
+      padding: 34px;
+      border: 1px solid #34365d;
+      border-radius: 24px;
+      background:
+        radial-gradient(ellipse at top right, #3d347b 0%, transparent 48%),
+        linear-gradient(135deg, #182344, #11172b);
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.8rem;
+    }
+
+    h1 {
+      margin: 15px 0;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      line-height: 1.1;
+    }
+
+    .hero p {
+      max-width: 620px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* 4. Search field */
+    .search-area {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+      max-width: 650px;
+    }
+
+    .search-area input {
+      flex: 1;
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid #394363;
+      border-radius: 12px;
+      background: #0b1020;
+      color: white;
+    }
+
+    .primary-btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    /* 5. Category filters */
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 36px 0 18px;
+    }
+
+    .section-heading p {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-bottom: 22px;
+    }
+
+    .filter-btn {
+      padding: 9px 15px;
+      border: 1px solid #343e5c;
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* 6. Show cards */
+    .show-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .show-card {
+      overflow: hidden;
+      border: 1px solid #28334e;
+      border-radius: 18px;
+      background: var(--panel);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .show-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+    }
+
+    .poster {
+      min-height: 165px;
+      display: grid;
+      place-items: center;
+      font-size: 3.6rem;
+      background: linear-gradient(135deg, #43387d, #166276);
+    }
+
+    .poster.pink {
+      background: linear-gradient(135deg, #762d65, #d77b66);
+    }
+
+    .poster.gold {
+      background: linear-gradient(135deg, #6d4b22, #9b8745);
+    }
+
+    .card-content {
+      padding: 17px;
+    }
+
+    .genre {
+      color: var(--cyan);
+      font-size: 0.8rem;
+    }
+
+    .card-content h3 {
+      margin: 9px 0;
+    }
+
+    .card-content p {
+      min-height: 42px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .card-actions button {
+      flex: 1;
+      padding: 10px 8px;
+      border: 1px solid #414b69;
+      border-radius: 9px;
+      background: transparent;
+      color: white;
+    }
+
+    .card-actions .details-btn {
+      background: #28264c;
+      border-color: #514a87;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      padding: 35px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* 7. Details popup */
+    dialog {
+      width: min(90%, 480px);
+      margin: auto;
+      padding: 25px;
+      border: 1px solid #4c5680;
+      border-radius: 18px;
+      background: var(--panel);
+      color: var(--text);
+    }
+
+    dialog::backdrop {
+      background: #000b;
+    }
+
+    dialog h2 {
+      margin-bottom: 12px;
+    }
+
+    dialog p {
+      margin: 12px 0 20px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* 8. Footer and mobile layout */
+    footer {
+      padding: 25px 6%;
+      border-top: 1px solid #27304a;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 800px) {
+      .show-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      header {
+        padding: 17px 5%;
+      }
+
+      main {
+        padding: 25px 5%;
+      }
+
+      .hero {
+        padding: 22px;
+      }
+
+      .show-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-area {
+        flex-direction: column;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }

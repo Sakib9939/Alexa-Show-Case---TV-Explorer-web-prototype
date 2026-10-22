@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alexa Show Case | TV Explorer</title>
+
+  <link rel="stylesheet" href="Alexa.css">
+</head>
+
+<body>
+  <header>
+    <div class="logo">Alexa <span>Show Case</span></div>
+    <div class="status">TV Explorer · Prototype</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Your entertainment explorer</div>
+      <h1>Find your next<br>favourite show.</h1>
+      <p>
+        Explore sample TV shows, search by title, browse genres
+        and save the shows you want to revisit.
+      </p>
+
+      <form class="search-area" id="searchForm">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search TV shows..."
+          aria-label="Search TV shows"
+        >
+        <button class="primary-btn" type="submit">Search</button>
+      </form>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <div>
+          <h2>Explore shows</h2>
+          <p id="resultCount">Sample catalogue</p>
+        </div>
+      </div>
+
+      <div class="filters" id="filters">
+        <button class="filter-btn active" data-genre="All">All</button>
+        <button class="filter-btn" data-genre="Drama">Drama</button>
+        <button class="filter-btn" data-genre="Sci-Fi">Sci-Fi</button>
+        <button class="filter-btn" data-genre="Comedy">Comedy</button>
+        <button class="filter-btn" data-genre="Mystery">Mystery</button>
+      </div>
+
+      <div class="show-grid" id="showGrid"></div>
+    </section>
+  </main>
+
+  <dialog id="detailsDialog">
+    <h2 id="dialogTitle">Show details</h2>
+    <div class="genre" id="dialogGenre"></div>
+    <p id="dialogDescription"></p>
+    <button class="primary-btn" id="closeDialog">Close</button>
+  </dialog>
+
+  <footer>
+    Alexa Show Case · Student project prototype<br>
+    Sample catalogue for demonstration; not an official Amazon product.
+  </footer>
+
+  <script>
+    // Sample data for the first prototype.
+    // These entries are demo content, not a live TV database.
+    const shows = [
+      {
+        id: 1,
+        title: "Cosmic Frontier",
+        genre: "Sci-Fi",
+        icon: "🚀",
+        style: "",
+        description: "A crew explores distant worlds and faces mysteries across space."
+      },
+      {
+        id: 2,
+        title: "The Last Clue",
+        genre: "Mystery",
+        icon: "🔎",
+        style: "pink",
+        description: "A young detective investigates puzzles hidden in a quiet town."
+      },
+      {
+        id: 3,
+        title: "City of Dreams",
+        genre: "Drama",
+        icon: "🌆",
+        style: "gold",
+        description: "Friends pursue their ambitions while navigating city life."
+      },
+      {
+        id: 4,
+        title: "Laughing Room",
+        genre: "Comedy",
+        icon: "😂",
+        style: "pink",
+        description: "Roommates turn ordinary everyday problems into comic adventures."
+      },
+      {
+        id: 5,
+        title: "Beyond Tomorrow",
+        genre: "Sci-Fi",
+        icon: "🪐",
+        style: "",
+        description: "Scientists explore a future where technology changes society."
+      },
+      {
+        id: 6,
+        title: "Hidden Letters",
+        genre: "Drama",
+        icon: "✉️",
+        style: "gold",
+        description: "Old letters bring a family together to uncover its history."
+      }
+    ];
+
+    // State: the current search, selected genre and saved show IDs.
+    let selectedGenre = "All";
+    let searchTerm = "";
+    const savedShows = new Set(
+  JSON.parse(localStorage.getItem("alexaSavedShows") || "[]")
+);
+
+    const showGrid = document.getElementById("showGrid");
+    const searchInput = document.getElementById("searchInput");
+    const resultCount = document.getElementById("resultCount");
+    const detailsDialog = document.getElementById("detailsDialog");
+
+    // Render cards based on the active search and category.
+    function renderShows() {
+      const filteredShows = shows.filter(show => {
+        const matchesGenre =
+          selectedGenre === "All" || show.genre === selectedGenre;
+
+        const matchesSearch =
+          show.title.toLowerCase().includes(searchTerm.toLowerCase());
+
+        return matchesGenre && matchesSearch;
+      });
+
+      resultCount.textContent =
+        `${filteredShows.length} sample show(s) found`;
+
+      if (filteredShows.length === 0) {
+        showGrid.innerHTML =
+          '<p class="empty">No matching shows. Try another search.</p>';
+        return;
+      }
+
+      showGrid.innerHTML = filteredShows.map(show => `
+        <article class="show-card">
+          <div class="poster ${show.style}" aria-hidden="true">
+            ${show.icon}
+          </div>
+          <div class="card-content">
+            <div class="genre">${show.genre}</div>
+            <h3>${show.title}</h3>
+            <p>${show.description}</p>
+            <div class="card-actions">
+              <button class="details-btn" data-details="${show.id}">
+                Details
+              </button>
+              <button data-save="${show.id}">
+                ${savedShows.has(show.id) ? "♥ Saved" : "♡ Save"}
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    // Search form: update the search term and redraw the cards.
+    document.getElementById("searchForm").addEventListener("submit", event => {
+      event.preventDefault();
+      searchTerm = searchInput.value.trim();
+      renderShows();
+    });
+
+    // Category filters.
+    document.getElementById("filters").addEventListener("click", event => {
+      const button = event.target.closest("button[data-genre]");
+      if (!button) return;
+
+      selectedGenre = button.dataset.genre;
+
+      document.querySelectorAll(".filter-btn").forEach(filter => {
+        filter.classList.toggle("active", filter === button);
+      });
+
+      renderShows();
+    });
+
+    // Card actions: show details or toggle saved state.
+    showGrid.addEventListener("click", event => {
+      const detailsButton = event.target.closest("button[data-details]");
+      const saveButton = event.target.closest("button[data-save]");
+
+      if (detailsButton) {
+        const show = shows.find(
+          item => item.id === Number(detailsButton.dataset.details)
+        );
+
+        document.getElementById("dialogTitle").textContent = show.title;
+        document.getElementById("dialogGenre").textContent = show.genre;
+        document.getElementById("dialogDescription").textContent =
+          show.description;
+
+        detailsDialog.showModal();
+      }
+
+      if (saveButton) {
+  const id = Number(saveButton.dataset.save);
+
+  if (savedShows.has(id)) {
+    savedShows.delete(id);
+  } else {
+    savedShows.add(id);
+  }
+
+  localStorage.setItem(
+    "alexaSavedShows",
+    JSON.stringify([...savedShows])
+  );
+
+  renderShows();
+}
+    });
+
+    document.getElementById("closeDialog").addEventListener("click", () => {
+      detailsDialog.close();
+    });
+
+    // Show the initial catalogue on page load.
+    renderShows();
+    
+  </script>
+</body>
+</html>
